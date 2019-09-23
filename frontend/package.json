@@ -1,15 +1,11 @@
 {
-  "name": "spendings-calculator",
+  "name": "frontend",
   "version": "0.1.0",
   "private": true,
-  "workspaces": [
-    "backend",
-    "frontend"
-  ],
   "scripts": {
-    "start:frontend": "cd frontend && vue-cli-service serve",
-    "build:frontend": "cd frontend && vue-cli-service build",
-    "lint:frontend": "cd frontend && vue-cli-service lint"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "core-js": "^2.6.5",
@@ -44,9 +40,7 @@
     }
   },
   "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
+    "> 1%",
+    "last 2 versions"
   ]
 }
