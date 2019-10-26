@@ -1,0 +1,20 @@
+.CostsForm {
+  padding: 1rem;
+
+  &__costs,
+  &__purpose,
+  &__add {
+    height: 1.5rem;
+  }
+
+  &__costs {
+    width: 2rem;
+  }
+
+  &__add {
+    display: block;
+    margin: 1rem auto;
+    width: 10rem;
+    cursor: pointer;
+  }
+}

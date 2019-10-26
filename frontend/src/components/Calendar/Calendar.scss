@@ -1,4 +1,8 @@
 .Calendar {
+  padding: 1rem;
+  &__month {
+    margin-top: 0;
+  }
   &__days {
     display: flex;
     flex-wrap: wrap;

@@ -11,10 +11,10 @@
     <div :class="b('days')">
       <Day v-for="day in mockDays" :key="day" />
       <Day
-        v-for="(day, index) in daysOfMonth"
-        :key="index"
+        v-for="(day, i) in daysOfMonth"
+        :key="i"
         :day="day"
-        :is-selected="day == selectedDay"
+        :is-selected="day === selectedDay"
         @set-selected-day="setSelectedDay"
       />
     </div>
@@ -26,7 +26,6 @@ import BEM from "../../helpers/BEM"
 import { times } from "ramda"
 import {
   getYear,
-  endOfMonth,
   format,
   getDaysInMonth,
   getISODay,
@@ -59,15 +58,6 @@ export default {
     }
   },
   computed: {
-    months() {
-      return times(month => {
-        const start = new Date(this.selectedYear, month, 1)
-        return {
-          start,
-          end: endOfMonth(start)
-        }
-      }, 12)
-    },
     selectedYear() {
       return getYear(this.selectedMonth)
     },
@@ -75,16 +65,10 @@ export default {
       return this.selectedMonth && format(this.selectedMonth, "MMMM")
     },
     daysOfMonth() {
-      return times(
-        index =>
-          console.log("2019-10-25T22:00:00.000Z" === "2019-10-25T22:00:00.000Z") ||
-          setDate(this.selectedMonth, index + 1),
-        getDaysInMonth(this.selectedMonth)
-      )
+      return times(i => setDate(this.selectedMonth, i + 1), getDaysInMonth(this.selectedMonth))
     },
     mockDays() {
-      const firstDayOfMonth = getISODay(this.selectedMonth)
-      return times(index => -index - 1, firstDayOfMonth - 1)
+      return times(i => -i - 1, getISODay(this.selectedMonth) - 1)
     }
   }
 }
