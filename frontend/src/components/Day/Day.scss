@@ -1,0 +1,17 @@
+.Day {
+  width: 1rem;
+  height: 1rem;
+  padding: 0.5rem;
+  line-height: 1rem;
+  cursor: pointer;
+  text-align: right;
+  border-radius: 100%;
+
+  &:hover {
+    background: azure;
+  }
+
+  &_selected {
+    background: cornflowerblue;
+  }
+}

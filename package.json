@@ -11,19 +11,6 @@
     "build:frontend": "cd frontend && vue-cli-service build",
     "lint:frontend": "cd frontend && vue-cli-service lint"
   },
-  "dependencies": {
-    "core-js": "^2.6.5",
-    "vue": "^2.6.10"
-  },
-  "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.11.0",
-    "@vue/cli-plugin-eslint": "^3.11.0",
-    "@vue/cli-service": "^3.11.0",
-    "babel-eslint": "^10.0.1",
-    "eslint": "^5.16.0",
-    "eslint-plugin-vue": "^5.0.0",
-    "vue-template-compiler": "^2.6.10"
-  },
   "eslintConfig": {
     "root": true,
     "env": {
@@ -48,5 +35,12 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "dependencies": {
+    "date-fns": "^2.6.0",
+    "frontend": "^2.0.0-alpha.4",
+    "node-sass": "^4.12.0",
+    "ramda": "^0.26.1",
+    "sass-loader": "^8.0.0"
+  }
 }
