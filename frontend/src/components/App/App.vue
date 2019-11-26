@@ -4,8 +4,8 @@
 
 <template>
   <div id="app" :class="b()">
-    <Calendar />
     <CostsForm />
+    <CostsList />
   </div>
 </template>
 
