@@ -1,11 +1,43 @@
+@import "../../../styles/colors.scss";
+
 .Calendar {
   padding: 1rem;
+  color: $darkgrey;
+
+  &__toggler {
+    background: transparent;
+    border: none;
+    color: $darkgrey;
+    &_prev {
+      margin-right: auto;
+    }
+    &_next {
+      margin-left: auto;
+    }
+  }
+
   &__month {
     margin-top: 0;
+    display: flex;
   }
-  &__days {
+
+  &__days,
+  &__weekdays {
     display: flex;
     flex-wrap: wrap;
     width: 14rem;
+    justify-content: space-between;
+  }
+
+  &__weekday {
+    font-size: 0.625rem;
+    text-align: center;
+    flex: 14%;
+    color: #aeaeae;
+  }
+
+  &__days:after {
+    content: " ";
+    margin: auto;
   }
 }

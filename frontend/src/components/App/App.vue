@@ -1,11 +1,15 @@
 <style lang="scss">
+@import "../../../styles/index.scss";
 @import "./App.scss";
 </style>
 
 <template>
   <div id="app" :class="b()">
-    <CostsForm />
-    <CostsList />
+    <Header />
+    <div :class="b('container')">
+      <CostsForm />
+      <CostsList />
+    </div>
   </div>
 </template>
 

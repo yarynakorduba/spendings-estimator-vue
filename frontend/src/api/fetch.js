@@ -1,6 +1,4 @@
 export const customFetch = async (url, method = "GET", body) => {
-  console.log("------> ", url, body, method)
-
   const jwt = localStorage.getItem("jwtToken")
 
   const options = {

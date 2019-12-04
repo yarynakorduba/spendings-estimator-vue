@@ -37,7 +37,6 @@ const cost = {
     },
     [FETCH_COSTS_SUCCESS]: (state, costs) => {
       //for direct interaction with the store module
-      console.log("-------------> ", costs)
       state.byId = indexBy(prop("_id"), costs)
       state.ids = map(prop("_id"), costs)
       state.isLoading = false
@@ -54,7 +53,6 @@ const cost = {
     [ADD_COST]: async (context, payload) => {
       context.commit(ADD_COST_START)
       const result = await Api.addCost(payload)
-      console.log(result)
       return result.error ? context.commit(ADD_COST_ERROR, result) : context.commit(ADD_COST_SUCCESS, result)
     }
   },

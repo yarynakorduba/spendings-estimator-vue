@@ -1,20 +1,33 @@
+@import "../../../styles/colors.scss";
+
 .CostsForm {
   padding: 1rem;
+  display: block;
 
-  &__costs,
+  &__amount,
   &__purpose,
   &__add {
     height: 1.5rem;
+    display: block;
+    margin: 0.5rem auto 0 auto;
+    width: 80%;
+    border: 1px solid #aeaeae;
+    border-radius: 3px;
   }
 
-  &__costs {
-    width: 2rem;
+  &__amount,
+  &__purpose {
+    padding: 0 0.5rem;
   }
 
   &__add {
     display: block;
     margin: 1rem auto;
     width: 10rem;
+    height: 2rem;
+    border: none;
+    background: $blue;
+    color: white;
     cursor: pointer;
   }
 }
