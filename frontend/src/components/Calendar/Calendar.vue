@@ -11,13 +11,14 @@
     <div :class="b('weekdays')">
       <div v-for="(day, i) in weekdays" :key="i" :class="b('weekday')">{{ day }}</div>
     </div>
+
     <div :class="b('days')">
       <Day v-for="day in mockDays" :key="day" />
       <Day
         v-for="(day, i) in daysOfMonth"
         :key="i"
         :day="day"
-        :is-selected="day === selectedDate"
+        :is-selected="isDateSelected(day)"
         @set-selected-day="setSelectedDate"
       />
     </div>
@@ -25,8 +26,8 @@
 </template>
 
 <script>
-import { times } from "ramda"
-import { getYear, format, getDaysInMonth, getISODay, setDate, subMonths, addMonths } from "date-fns"
+import { times, compose, map } from "ramda"
+import { getYear, format, getDaysInMonth, getISODay, setDate, subMonths, addMonths, formatISO } from "date-fns"
 
 import BEM from "../../helpers/BEM"
 import { WEEKDAYS } from "../../constants"
@@ -49,6 +50,9 @@ export default {
     }
   },
   methods: {
+    isDateSelected(date) {
+      return date.toString() === this.selectedDate.toString()
+    },
     setSelectedDate(day) {
       this.selectedDate = new Date(day)
     },
@@ -65,10 +69,13 @@ export default {
       return this.selectedDate && format(this.selectedDate, "MMMM")
     },
     daysOfMonth() {
-      return times(i => setDate(this.selectedDate, i + 1), getDaysInMonth(this.selectedDate))
+      return compose(
+        times(i => setDate(this.selectedDate, i + 1)),
+        getDaysInMonth
+      )(this.selectedDate)
     },
     mockDays() {
-      return times(i => -i - 1, getISODay(this.selectedDate) - 1)
+      return times(i => -i - 1, getISODay(setDate(this.selectedDate, 1)) - 1)
     }
   }
 }
