@@ -1,5 +1,5 @@
 export const customFetch = async (url, method = "GET", body) => {
-  const jwt = localStorage.getItem("jwtToken")
+  const jwt = localStorage.getItem("jwt")
 
   const options = {
     headers: {
@@ -17,5 +17,18 @@ export const customFetch = async (url, method = "GET", body) => {
     options.headers.Authorization = `${jwt}`
   }
 
-  return await fetch(`http://localhost:4000/${url}`, options).then(x => x.json())
+  const result = await fetch(`http://localhost:4000/${url}`, options)
+    .then(x => x.json())
+    .then(x => {
+      if (x.jwt && x.jwt.length) {
+        localStorage.setItem("jwt", x.jwt)
+      }
+      if (x.jwt === "") {
+        localStorage.clear()
+        window.location.reload()
+      }
+      return x
+    })
+
+  return result
 }

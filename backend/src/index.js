@@ -1,15 +1,14 @@
 import express from "express"
-import path from "path"
-import dotenv from "dotenv"
 import cors from "cors"
 import bodyParser from "body-parser"
 
-import costs from "./routes/costs"
+import "./dotenvConfig"
 
-dotenv.config({
-  path: path.resolve("../.env")
-})
-require("./db")
+import costs from "./routes/costs"
+import users from "./routes/users"
+
+import "./db"
+
 const PORT = process.env.PORT || 4000
 
 const app = express()
@@ -28,6 +27,7 @@ app.use((req, res, next) => {
 })
 
 app.use("/api/costs", costs)
+app.use("/api/users", users)
 
 app.use((req, res, next) => {
   const error = new Error("Not found")

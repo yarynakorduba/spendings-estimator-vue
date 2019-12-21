@@ -1,6 +1,7 @@
-import { map, prop, indexBy } from "ramda"
-import Api from "../api"
-import { ADD_COST, FETCH_COSTS } from "./actionTypes"
+import { map, prop, indexBy, pickBy } from "ramda"
+import { isWithinInterval } from "date-fns"
+import Api from "../../api"
+import { ADD_COST, FETCH_COSTS } from "../actionTypes"
 import {
   ADD_COST_START,
   ADD_COST_ERROR,
@@ -8,9 +9,9 @@ import {
   FETCH_COSTS_START,
   FETCH_COSTS_SUCCESS,
   FETCH_COSTS_ERROR
-} from "./mutationTypes"
+} from "../mutationTypes"
 
-const cost = {
+export default {
   state: {
     byId: {},
     ids: [],
@@ -53,14 +54,23 @@ const cost = {
     [ADD_COST]: async (context, payload) => {
       context.commit(ADD_COST_START)
       const result = await Api.addCost(payload)
-      return result.error ? context.commit(ADD_COST_ERROR, result) : context.commit(ADD_COST_SUCCESS, result)
+      return result.error ? context.commit(ADD_COST_ERROR, result) : context.commit(ADD_COST_SUCCESS, result.cost)
     }
   },
   getters: {
     getIds: ({ ids }) => ids,
     getCostById: ({ byId }) => id => byId[id],
-    getCosts: (state, getters) => map(id => getters.getCostById(id), state.ids)
+    getCosts: (state, getters) => map(id => getters.getCostById(id), state.ids),
+    getCostsByDateRange: state => (start, end) =>
+      pickBy(
+        val =>
+          console.log(
+            new Date(val.date),
+            new Date(start),
+            new Date(end),
+            isWithinInterval(new Date(val.date), { start: new Date(start), end: new Date(end) })
+          ) || isWithinInterval(new Date(val.date), { start: new Date(start), end: new Date(end) }),
+        state.byId
+      )
   }
 }
-
-export default cost

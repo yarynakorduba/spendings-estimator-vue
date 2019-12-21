@@ -1,6 +1,5 @@
 <style lang="scss">
-@import "../../../styles/index.scss";
-@import "./App.scss";
+@import "./Dashboard";
 </style>
 
 <template>
@@ -17,11 +16,13 @@
 import BEM from "../../helpers/BEM"
 
 export default {
-  name: "app",
   data() {
     return {
-      b: BEM("App")
+      b: BEM("Dashboard")
     }
+  },
+  mounted() {
+    console.log(this)
   }
 }
 </script>

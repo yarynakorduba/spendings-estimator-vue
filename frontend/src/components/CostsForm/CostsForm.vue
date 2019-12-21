@@ -25,10 +25,15 @@ export default {
       date: format(new Date(), "yyyy-MM-dd")
     }
   },
+  watch: {
+    date() {
+      this.$root.$emit("set-date", this.date)
+    }
+  },
   methods: {
     async handleSubmit(event) {
       event.preventDefault()
-      this.$store.dispatch(ADD_COST, { amount: this.amount, purpose: this.purpose, date: "2019-10-10" })
+      this.$store.dispatch(ADD_COST, { amount: this.amount, purpose: this.purpose, date: this.date })
       this.amount = 0
       this.purpose = ""
     }

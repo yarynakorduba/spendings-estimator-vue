@@ -1,51 +1,46 @@
-const { ContextReplacementPlugin } = require("webpack")
-const NodemonPlugin = require("nodemon-webpack-plugin")
 const path = require("path")
+const nodeExternals = require("webpack-node-externals")
 
-module.exports = {
-  target: "node",
-  mode: "development",
-  entry: "./src/index.js",
-  output: {
-    path: path.resolve(__dirname, "dist"),
-    filename: "bundle.js"
+const config = {
+  entry: {
+    polyfill: "babel-polyfill",
+    app: "./src/index.js"
   },
+  target: "node",
+  externals: [nodeExternals()], // in order to ignore all modules in node_modules folder
+  devtool: "source-map",
+
+  output: {
+    filename: "[name].js",
+    publicPath: "/client/dist/",
+    chunkFilename: "[name].bundle.js",
+    path: `${__dirname}/client/dist`
+  },
+
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
-        exclude: /node_modules/,
+        test: /\.(js)$/,
+        options: {
+          configFile: path.join(__dirname, "..", "babel.config.js")
+        },
+        exclude: [/node_modules/],
+        include: [/src/, path.join(__dirname, "..", "node_modules/@babel/runtime-corejs2/helpers/esm/")],
         use: {
-          loader: "babel-loader",
-          options: {
-            presets: ["@babel/preset-env", "@babel/preset-react", "@babel/preset-flow"]
-          }
+          loader: "babel-loader"
         }
       },
       {
-        test: /\.(sa|sc|c)ss$/,
-        use: [
-          {
-            loader: "ignore-loader"
-          }
-        ]
-      },
-      {
-        test: /\.(png|jpe?g|gif)$/,
-        use: [
-          {
-            loader: "file-loader"
-          },
-          {
-            loader: "url-loader"
-          }
-        ]
+        test: /\.(woff2?|eot|ttf|otf)$/,
+        loader: "file-loader",
+        options: {
+          limit: 10000,
+          name: "[name].[hash:7].[ext]"
+        }
       }
     ]
   },
-  plugins: [
-    new NodemonPlugin(),
-    //For fixing warning https://github.com/Automattic/mongoose/issues/7476
-    new ContextReplacementPlugin(/.*/)
-  ]
+  watch: true
 }
+
+module.exports = config

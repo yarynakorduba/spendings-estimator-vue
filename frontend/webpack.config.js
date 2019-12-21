@@ -1,4 +1,5 @@
 const { ContextReplacementPlugin } = require("webpack")
+const VueLoaderPlugin = require("vue-loader/lib/plugin")
 const NodemonPlugin = require("nodemon-webpack-plugin")
 const path = require("path")
 
@@ -12,6 +13,12 @@ module.exports = {
     chunkFilename: "[name].bundle.js",
     path: `${__dirname}/frontend/dist`
   },
+  resolve: {
+    extensions: [".js", ".vue"],
+    alias: {
+      vue: "vue/dist/vue.esm.js" // Use the full build
+    }
+  },
   module: {
     rules: [
       {
@@ -24,6 +31,11 @@ module.exports = {
             plugins: ["@babel/plugin-syntax-dynamic-import"]
           }
         }
+      },
+      {
+        test: /\.vue$/,
+        include: [path.resolve(__dirname, "client/src/")],
+        loader: "vue-loader"
       },
 
       {
@@ -50,6 +62,7 @@ module.exports = {
   plugins: [
     new NodemonPlugin(),
     //For fixing warning https://github.com/Automattic/mongoose/issues/7476
+    new VueLoaderPlugin(),
     new ContextReplacementPlugin(/.*/)
   ]
 }
