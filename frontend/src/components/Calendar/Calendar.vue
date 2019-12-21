@@ -1,6 +1,7 @@
 <style lang="scss">
 @import "./Calendar.scss";
 </style>
+
 <template>
   <div :class="b()">
     <h3 :class="b('month')">
@@ -13,7 +14,7 @@
     </div>
 
     <div :class="b('days')">
-      <Day v-for="day in mockDays" :key="day" />
+      <Day v-for="day in mockDays" :key="day" type="mock" />
       <Day
         v-for="(day, i) in daysOfMonth"
         :key="i"
@@ -27,7 +28,7 @@
 
 <script>
 import { times, compose, map } from "ramda"
-import { getYear, format, getDaysInMonth, getISODay, setDate, subMonths, addMonths, formatISO } from "date-fns"
+import { getYear, format, getDaysInMonth, getISODay, setDate, subMonths, addMonths } from "date-fns"
 
 import BEM from "../../helpers/BEM"
 import { WEEKDAYS } from "../../constants"

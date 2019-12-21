@@ -8,7 +8,8 @@
     <div :class="b('container')">
       <CostsForm />
       <CostsList />
-    </div>
+      <YearlyChart />
+    </div>  
   </div>
 </template>
 
@@ -20,9 +21,6 @@ export default {
     return {
       b: BEM("Dashboard")
     }
-  },
-  mounted() {
-    console.log(this)
   }
 }
 </script>

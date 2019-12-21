@@ -30,7 +30,6 @@ export default {
       await this.$store.dispatch(action, {
         email: this.email,
         password: this.password,
-        date: "2019-10-10",
         router: this.$router
       })
       this.email = 0

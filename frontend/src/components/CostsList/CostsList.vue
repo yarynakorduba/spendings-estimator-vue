@@ -13,34 +13,42 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex"
 import { format } from "date-fns"
 import BEM from "../../helpers/BEM"
-import { FETCH_COSTS } from "../../store/actionTypes"
+import { costsMixin } from "../../mixins"
 
 export default {
+  mixins: [costsMixin],
   data() {
     return {
       b: BEM("CostsList"),
-      costsOfDate: []
+      costsOfDate: [],
+      date: null
+    }
+  },
+  watch: {
+    areCostsLoading() {
+      this.getCostsOfDay()
+    },
+    date() {
+      this.getCostsOfDay()
     }
   },
   computed: {
-    ...mapGetters({ user: "getUser", getCosts: "getCostsByDateRange" }),
     displayedCosts() {
       return this.costsOfDate.map(cost => ({ ...cost, date: format(new Date(cost.date), "dd/MM/yyyy") }))
     }
   },
-  async mounted() {
+  mounted() {
     this.$root.$on("set-date", this.handleDateSetting)
-    this.fetchCosts()
+    this.handleDateSetting(format(new Date(), "yyyy-MM-dd"))
   },
   methods: {
-    fetchCosts() {
-      this.$store.dispatch(FETCH_COSTS)
-    },
     handleDateSetting(date) {
-      this.costsOfDate = this.getCosts(date, date)
+      this.date = date
+    },
+    getCostsOfDay() {
+      this.costsOfDate = this.getCosts(this.date, this.date)
     }
   }
 }

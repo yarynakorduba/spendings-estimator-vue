@@ -1,4 +1,4 @@
-import { map, prop, indexBy, pickBy } from "ramda"
+import { map, prop, indexBy, pickBy, compose, values } from "ramda"
 import { isWithinInterval } from "date-fns"
 import Api from "../../api"
 import { ADD_COST, FETCH_COSTS } from "../actionTypes"
@@ -62,15 +62,10 @@ export default {
     getCostById: ({ byId }) => id => byId[id],
     getCosts: (state, getters) => map(id => getters.getCostById(id), state.ids),
     getCostsByDateRange: state => (start, end) =>
-      pickBy(
-        val =>
-          console.log(
-            new Date(val.date),
-            new Date(start),
-            new Date(end),
-            isWithinInterval(new Date(val.date), { start: new Date(start), end: new Date(end) })
-          ) || isWithinInterval(new Date(val.date), { start: new Date(start), end: new Date(end) }),
-        state.byId
-      )
+      compose(
+        values,
+        pickBy(val => isWithinInterval(new Date(val.date), { start: new Date(start), end: new Date(end) }))
+      )(state.byId),
+    areCostsLoading: state => state.isLoading
   }
 }
