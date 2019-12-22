@@ -3,13 +3,16 @@
 </style>
 
 <template>
-  <table :class="b()">
-    <tr :class="b('cost')" v-for="cost in costsOfDate" :key="cost._id">
-      <td :class="b('date')">{{ cost.date }}</td>
-      <td :class="b('purpose')">{{ cost.purpose }}</td>
-      <td :class="b('amount')">{{ cost.amount }}</td>
-    </tr>
-  </table>
+  <div>
+    <h2 :class="b('header')">{{ date }}</h2>
+    <table :class="b()">
+      <tr :class="b('cost')" v-for="cost in costsOfDate" :key="cost._id">
+        <td :class="b('date')">{{ cost.date }}</td>
+        <td :class="b('purpose')">{{ cost.purpose }}</td>
+        <td :class="b('amount')">{{ cost.amount }}</td>
+      </tr>
+    </table>
+  </div>
 </template>
 
 <script>

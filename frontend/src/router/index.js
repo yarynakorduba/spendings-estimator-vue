@@ -20,7 +20,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   const jwtToken = localStorage.getItem("jwt")
 
-  if (to.path === "/login" && jwtToken) next("/dashboard")
+  if ((to.path === "/login" || to.path === "/") && jwtToken) next("/dashboard")
   else if (!jwtToken && to.path !== "/login") {
     next("/login")
   } else next()

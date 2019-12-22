@@ -4,8 +4,9 @@
 
 <template>
   <div :class="b()">
-    <h2 :class="b('header')">Yearly Chart</h2>
-    <svg :class="b('year')" />
+    <h2 :class="b('header')">Your spendings in this year</h2>
+    <div :class="b('container')"><svg :class="b('year')" /></div>
+    {{ mockDays }}
   </div>
 </template>
 
@@ -13,10 +14,12 @@
 import * as d3 from "d3"
 import { mapState } from "vuex"
 import { costsMixin } from "../../mixins"
-import { groupBy, reduce, prop, compose, isEmpty, map } from "ramda"
-import { format, startOfYear, endOfYear, eachDayOfInterval } from "date-fns"
+import { groupBy, reduce, prop, compose, isEmpty, map, times } from "ramda"
+import { format, startOfYear, endOfYear, eachDayOfInterval, getISODay, subDays, isBefore } from "date-fns"
 
 import BEM from "../../helpers/BEM"
+
+const dateFormat = "yyyy-MM-dd"
 
 export default {
   mixins: [costsMixin],
@@ -31,21 +34,31 @@ export default {
   computed: {
     ...mapState(["costs"]),
     daysOfYear() {
-      const days = eachDayOfInterval({ start: this.year, end: endOfYear(this.year) })
-      const groupedCosts = groupBy(cost => format(new Date(cost.date), "yyyy-MM-dd"))(this.costsOfYear)
-      const result = days.map(date => ({
-        date: format(new Date(date), "yyyy-MM-dd"),
-        costs: groupedCosts[format(new Date(date), "yyyy-MM-dd")] || [],
-        costsSum: reduce((acc, { amount }) => acc + amount, 0, groupedCosts[format(new Date(date), "yyyy-MM-dd")] || [])
-      }))
-
-      return result
+      const groupedCosts = groupBy(cost => format(new Date(cost.date), dateFormat))(this.costsOfYear)
+      return compose(
+        map(date => ({
+          date: format(new Date(date), dateFormat),
+          costs: groupedCosts[format(new Date(date), dateFormat)] || [],
+          costsSum: reduce((acc, { amount }) => acc + amount, 0, groupedCosts[format(new Date(date), dateFormat)] || [])
+        })),
+        year => eachDayOfInterval({ start: year, end: endOfYear(year) })
+      )(this.year)
     },
     minCosts() {
       return !isEmpty(this.daysOfYear) ? compose(d3.min, map(prop("costsSum")))(this.daysOfYear) : 0
     },
     maxCosts() {
       return !isEmpty(this.daysOfYear) ? compose(d3.max, map(prop("costsSum")))(this.daysOfYear) : 0
+    },
+    mockDays() {
+      return times(
+        day => ({
+          date: format(subDays(new Date(this.year), day + 1), dateFormat), //format(subtract(new Date(this.year), -day - 1), dateFormat),
+          costs: [],
+          costsSum: 0
+        }),
+        getISODay(new Date(this.year))
+      )
     }
   },
   watch: {
@@ -56,13 +69,24 @@ export default {
   },
   mounted() {
     this.getCostsOfYear()
+    const chartWidth = 700
+    const chartHeight = 130
 
-    this.field = d3
+    const container = d3
       .select("svg")
-      .attr("width", "700px")
-      .attr("height", "100px")
+      .attr("width", chartWidth)
+      .attr("height", chartHeight)
+
+    this.field = container.append("g").attr("transform", "translate(30, 30)")
+
+    container
       .append("g")
-    this.drawChart()
+      .selectAll("text")
+      .data(["mon", "tue", "wed", "thu", "fri", "sat", "sun"])
+      .join("text")
+      .attr("class", () => this.b("weekday"))
+      .attr("y", (d, i) => (i % 7) * 11 + 37)
+      .text(d => d)
   },
   methods: {
     drawChart() {
@@ -71,23 +95,28 @@ export default {
         .selectAll("rect")
         .enter()
         .append("rect")
-        .data(this.daysOfYear)
+        .data([...this.mockDays, ...this.daysOfYear])
         .join("rect")
         .attr("x", (d, i) => Math.floor(i / 7) * 11)
         .attr("y", (d, i) => (i % 7) * 11)
-        .attr("class", d => this.b("day", [d.date]))
-        .style("fill", d => this.getColor(d))
+        .attr("class", d => this.b("day", [isBefore(new Date(d.date), new Date(this.year)) ? "mock" : d.date]))
+        .style("fill", this.getColor)
         .on("click", d => console.log(d))
     },
     getCostsOfYear() {
-      this.costsOfYear = this.getCosts(format(this.year, "yyyy-MM-dd"), format(endOfYear(this.year), "yyyy-MM-dd"))
+      this.costsOfYear = this.getCosts(format(this.year, dateFormat), format(endOfYear(this.year), dateFormat))
     },
     getColor(d) {
       const sumOfCosts = reduce((acc, current) => acc + current.amount, 0, d.costs)
-      return d3
-        .scaleLinear()
-        .domain([this.minCosts, this.maxCosts])
-        .range(["#d9effc", "#0000A0"])(sumOfCosts)
+      if (isBefore(new Date(d.date), new Date(this.year))) {
+        return "white"
+      }
+      return sumOfCosts === 0
+        ? "rgb(235, 237, 240)"
+        : d3
+            .scaleLinear()
+            .domain([this.minCosts, this.maxCosts])
+            .range(["#d9effc", "#0000A0"])(sumOfCosts)
     }
   }
 }

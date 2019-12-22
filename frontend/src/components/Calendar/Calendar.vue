@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { times, compose, map } from "ramda"
+import { times, compose } from "ramda"
 import { getYear, format, getDaysInMonth, getISODay, setDate, subMonths, addMonths } from "date-fns"
 
 import BEM from "../../helpers/BEM"
