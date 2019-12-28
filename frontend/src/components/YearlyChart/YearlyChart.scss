@@ -1,3 +1,5 @@
+@import "../../../styles/colors.scss";
+
 .YearlyChart {
   &__day {
     width: 0.5rem;
@@ -6,6 +8,6 @@
 
   &__weekday {
     font-size: 0.65rem;
-    fill: #aeaeae;
+    fill: $grey;
   }
 }

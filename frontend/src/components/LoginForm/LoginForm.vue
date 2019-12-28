@@ -8,7 +8,7 @@
     <input :class="b('password')" v-model="password" name="purpose" type="password" placeholder="keenPassword" />
     <button v-if="isSignUp" :class="b('signup')" @click="handleSubmit">Sign up</button>
     <button v-else :class="b('signin')" @click="handleSubmit">Sign in</button>
-                                                    <small v-if="isSignUp" :class="b('message')"
+    <small v-if="isSignUp" :class="b('message')"
       >Already have an account? <a :class="b('signin-link')" href="/signin">Sign in</a> here :)</small
     >
     <small v-else :class="b('message')"

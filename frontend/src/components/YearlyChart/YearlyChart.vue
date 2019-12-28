@@ -6,12 +6,12 @@
   <div :class="b()">
     <h2 :class="b('header')">Your spendings in this year</h2>
     <div :class="b('container')"><svg :class="b('year')" /></div>
+    {{ areCostsLoading }}
   </div>
 </template>
 
 <script>
 import * as d3 from "d3";
-import { mapState } from "vuex";
 import { costsMixin } from "../../mixins";
 import { groupBy, reduce, prop, compose, isEmpty, map, times } from "ramda";
 import { format, startOfYear, endOfYear, eachDayOfInterval, getISODay, subDays, isBefore } from "date-fns";
@@ -31,7 +31,6 @@ export default {
     };
   },
   computed: {
-    ...mapState(["costs"]),
     daysOfYear() {
       const groupedCosts = groupBy(cost => format(new Date(cost.date), dateFormat))(this.costsOfYear);
       return compose(
@@ -68,6 +67,7 @@ export default {
   },
   mounted() {
     this.getCostsOfYear();
+
     const chartWidth = 700;
     const chartHeight = 130;
 
@@ -86,6 +86,7 @@ export default {
       .attr("class", () => this.b("weekday"))
       .attr("y", (d, i) => (i % 7) * 11 + 37)
       .text(d => d);
+    this.drawChart();
   },
   methods: {
     drawChart() {

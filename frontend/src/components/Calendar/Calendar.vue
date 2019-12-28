@@ -20,6 +20,7 @@
         :key="i"
         :day="day"
         :is-selected="isDateSelected(day)"
+        :has-costs="hasDateCosts(day)"
         @set-selected-day="setSelectedDate"
       />
     </div>
@@ -27,57 +28,90 @@
 </template>
 
 <script>
-import { times, compose } from "ramda"
-import { getYear, format, getDaysInMonth, getISODay, setDate, subMonths, addMonths } from "date-fns"
+import { times, compose, groupBy } from "ramda";
+import {
+  getYear,
+  format,
+  getDaysInMonth,
+  getISODay,
+  setDate,
+  subMonths,
+  addMonths,
+  startOfMonth,
+  endOfMonth
+} from "date-fns";
 
-import BEM from "../../helpers/BEM"
-import { WEEKDAYS } from "../../constants"
+import BEM from "../../helpers/BEM";
+import { costsMixin } from "../../mixins";
+import { WEEKDAYS } from "../../constants";
+
+const dateFormat = "yyyy-MM-dd";
 
 export default {
+  mixins: [costsMixin],
   props: { value: { type: String, default: () => "" } },
   data() {
     return {
       b: BEM("Calendar"),
       selectedDate: new Date(this.value),
-      weekdays: WEEKDAYS
-    }
+      weekdays: WEEKDAYS,
+      costsOfMonth: {}
+    };
+  },
+  mounted() {
+    this.getCostsOfMonth();
   },
   watch: {
+    areCostsLoading() {
+      this.getCostsOfMonth();
+    },
     value() {
-      this.selectedDate = new Date(this.value)
+      this.selectedDate = new Date(this.value);
     },
     selectedDate() {
-      this.$emit("input", format(this.selectedDate, "yyyy-MM-dd"))
+      this.$emit("input", format(this.selectedDate, "yyyy-MM-dd"));
+      this.getCostsOfMonth();
     }
   },
   methods: {
+    getCostsOfMonth() {
+      const selectedDate = new Date(this.selectedDate);
+      const start = startOfMonth(selectedDate);
+      const end = endOfMonth(selectedDate);
+      this.costsOfMonth = groupBy(cost => format(new Date(cost.date), dateFormat))(this.getCosts(start, end));
+    },
     isDateSelected(date) {
-      return date.toString() === this.selectedDate.toString()
+      return date.toString() === this.selectedDate.toString();
+    },
+    hasDateCosts(date) {
+      return !!this.costsOfMonth[format(new Date(date), dateFormat)];
     },
     setSelectedDate(day) {
-      this.selectedDate = new Date(day)
+      this.selectedDate = new Date(day);
     },
     handleMonthChange(event, direction) {
-      event.preventDefault()
-      this.selectedDate = direction === "prev" ? subMonths(this.selectedDate, 1) : addMonths(this.selectedDate, 1)
+      event.preventDefault();
+      8;
+
+      this.selectedDate = direction === "prev" ? subMonths(this.selectedDate, 1) : addMonths(this.selectedDate, 1);
     }
   },
   computed: {
     displayedYear() {
-      return getYear(this.selectedDate)
+      return getYear(this.selectedDate);
     },
     displayedMonth() {
-      return this.selectedDate && format(this.selectedDate, "MMMM")
+      return this.selectedDate && format(this.selectedDate, "MMMM");
     },
     daysOfMonth() {
       return compose(
         times(i => setDate(this.selectedDate, i + 1)),
         getDaysInMonth
-      )(this.selectedDate)
+      )(this.selectedDate);
     },
     mockDays() {
-      return times(i => -i - 1, getISODay(setDate(this.selectedDate, 1)) - 1)
+      return times(i => -i - 1, getISODay(setDate(this.selectedDate, 1)) - 1);
     }
   }
-}
+};
 </script>

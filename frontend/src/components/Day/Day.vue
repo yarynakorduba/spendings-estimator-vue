@@ -3,33 +3,40 @@
 </style>
 
 <template>
-  <span :class="isSelected ? b(['selected']) : b()" @click="handleClick">
+  <span :class="customClass" @click="handleClick">
     {{ displayedDay }}
   </span>
 </template>
 
 <script>
-import { format } from "date-fns"
-import BEM from "../../helpers/BEM"
+import { filter } from "ramda";
+import { format } from "date-fns";
+import BEM from "../../helpers/BEM";
 
 export default {
-  props: ["day", "isSelected"],
+  props: ["day", "isSelected", "hasCosts"],
   data() {
     return {
       b: BEM("Day")
-    }
+    };
   },
   methods: {
     handleClick() {
-      this.$emit("set-selected-day", this.day)
+      this.$emit("set-selected-day", this.day);
     }
   },
   computed: {
+    customClass() {
+      let modifiers = filter(el => el.length, [this.isSelected ? "selected" : "", this.hasCosts ? "has-costs" : ""]);
+
+      return modifiers.length ? this.b(modifiers) : this.b();
+    },
+
     displayedDay() {
-      return this.day && format(this.day, "dd")
+      return this.day && format(this.day, "dd");
     }
   }
-}
+};
 </script>
 
 <style></style>

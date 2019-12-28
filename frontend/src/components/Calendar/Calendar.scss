@@ -3,6 +3,7 @@
 .Calendar {
   padding: 1rem;
   color: $darkgrey;
+  height: 14.5rem;
 
   &__toggler {
     background: transparent;
@@ -33,7 +34,7 @@
     font-size: 0.625rem;
     text-align: center;
     flex: 14%;
-    color: #aeaeae;
+    color: $grey;
   }
 
   &__days:after {
