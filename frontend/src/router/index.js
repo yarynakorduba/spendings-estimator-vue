@@ -1,12 +1,13 @@
-import Vue from "vue"
-import VueRouter from "vue-router"
+import Vue from "vue";
+import VueRouter from "vue-router";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const router = new VueRouter({
   mode: "history",
   routes: [
-    { path: "/login", name: "login", component: () => import("../pages/Login") },
+    { path: "/signin", name: "signin", component: () => import("../pages/Login") },
+    { path: "/signup", name: "signup", component: () => import("../pages/Login") },
     { path: "/dashboard", name: "dashboard", component: () => import("../pages/Dashboard") },
     {
       path: "*",
@@ -15,15 +16,15 @@ const router = new VueRouter({
       }
     }
   ]
-})
+});
 
 router.beforeEach((to, from, next) => {
-  const jwtToken = localStorage.getItem("jwt")
+  const jwtToken = localStorage.getItem("jwt");
 
-  if ((to.path === "/login" || to.path === "/") && jwtToken) next("/dashboard")
-  else if (!jwtToken && to.path !== "/login") {
-    next("/login")
-  } else next()
-})
+  if ((to.path === "/signin" || to.path === "/") && jwtToken) next("/dashboard");
+  else if (!jwtToken && to.path !== "/signin" && to.path !== "/signup") {
+    next("/signin");
+  } else next();
+});
 
-export default router
+export default router;

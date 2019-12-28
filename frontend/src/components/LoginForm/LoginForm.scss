@@ -1,2 +1,29 @@
 .LoginForm {
+  &__email,
+  &__password {
+    display: block;
+    height: 2rem;
+    width: 20rem;
+    padding: 0 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 5px;
+    border: none;
+  }
+
+  &__signin,
+  &__signup {
+    margin-top: 0.75rem;
+    margin-bottom: 1.25rem;
+    height: 2rem;
+    line-height: 2rem;
+    padding: 0 1.5rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+  }
+
+  &__message {
+    display: block;
+    color: #4b4b4b;
+  }
 }
