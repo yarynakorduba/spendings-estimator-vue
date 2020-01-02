@@ -27,6 +27,8 @@ import {
   getDayOfYear
 } from "date-fns";
 
+import { getCostYears } from "../../api/";
+
 import BEM from "../../helpers/BEM";
 import { dateFormat } from "../../constants";
 
@@ -84,7 +86,7 @@ export default {
       this.drawChart();
     }
   },
-  mounted() {
+  async mounted() {
     this.getCostsOfYear();
 
     const container = d3

@@ -14,6 +14,7 @@ export const costsMixin = {
   },
   mounted() {
     if (!this.costs.ids.length && typeof this.areCostsLoading === "boolean" && !this.areCostsLoading) {
+      // getCostYears();
       this.fetchCosts();
     }
   },
@@ -21,5 +22,8 @@ export const costsMixin = {
     fetchCosts() {
       this.$store.dispatch(FETCH_COSTS);
     }
+    // getCostYears() {
+    //   this.$store.dispatch(FETCH_COSTS);
+    // }
   }
 };
