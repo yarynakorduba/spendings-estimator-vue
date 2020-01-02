@@ -42,10 +42,9 @@ import {
 } from "date-fns";
 
 import BEM from "../../helpers/BEM";
-import { costsMixin } from "../../mixins";
-import { WEEKDAYS } from "../../constants";
 
-const dateFormat = "yyyy-MM-dd";
+import { costsMixin } from "../../mixins";
+import { WEEKDAYS, dateFormat } from "../../constants";
 
 export default {
   mixins: [costsMixin],
@@ -69,7 +68,7 @@ export default {
       this.selectedDate = new Date(this.value);
     },
     selectedDate() {
-      this.$emit("input", format(this.selectedDate, "yyyy-MM-dd"));
+      this.$emit("input", format(this.selectedDate, dateFormat));
       this.getCostsOfMonth();
     }
   },

@@ -10,4 +10,17 @@
     font-size: 0.65rem;
     fill: $grey;
   }
+
+  &__month {
+    font-size: 0.65rem;
+    fill: $grey;
+  }
+
+  &__header {
+    color: $darkgrey;
+  }
+
+  &__month-container {
+    transform: translate(30px, 0);
+  }
 }

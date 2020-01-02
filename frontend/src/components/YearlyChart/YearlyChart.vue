@@ -6,7 +6,6 @@
   <div :class="b()">
     <h2 :class="b('header')">Your spendings in this year</h2>
     <div :class="b('container')"><svg :class="b('year')" /></div>
-    {{ areCostsLoading }}
   </div>
 </template>
 
@@ -14,11 +13,31 @@
 import * as d3 from "d3";
 import { costsMixin } from "../../mixins";
 import { groupBy, reduce, prop, compose, isEmpty, map, times } from "ramda";
-import { format, startOfYear, endOfYear, eachDayOfInterval, getISODay, subDays, isBefore } from "date-fns";
+import {
+  format,
+  startOfYear,
+  endOfYear,
+  eachDayOfInterval,
+  getISODay,
+  subDays,
+  isBefore,
+  setMonth,
+  setDate,
+  setDay,
+  getDayOfYear
+} from "date-fns";
 
 import BEM from "../../helpers/BEM";
+import { dateFormat } from "../../constants";
 
-const dateFormat = "yyyy-MM-dd";
+const weekdays = 7;
+const weekdaysList = new Array(7).fill(1).map((val, i) => setDay(new Date(), i + 1));
+const monthsList = new Array(12).fill(1).map((val, i) => setMonth(setDate(new Date(), 1), i + 1));
+
+const chartWidth = 700;
+const chartHeight = 130;
+const cellWidth = 11;
+const margin = 37;
 
 export default {
   mixins: [costsMixin],
@@ -51,7 +70,7 @@ export default {
     mockDays() {
       return times(
         day => ({
-          date: format(subDays(new Date(this.year), day + 1), dateFormat), //format(subtract(new Date(this.year), -day - 1), dateFormat),
+          date: format(subDays(new Date(this.year), day + 1), dateFormat),
           costs: [],
           costsSum: 0
         }),
@@ -68,9 +87,6 @@ export default {
   mounted() {
     this.getCostsOfYear();
 
-    const chartWidth = 700;
-    const chartHeight = 130;
-
     const container = d3
       .select("svg")
       .attr("width", chartWidth)
@@ -81,11 +97,23 @@ export default {
     container
       .append("g")
       .selectAll("text")
-      .data(["mon", "tue", "wed", "thu", "fri", "sat", "sun"])
+      .data(weekdaysList)
       .join("text")
       .attr("class", () => this.b("weekday"))
-      .attr("y", (d, i) => (i % 7) * 11 + 37)
-      .text(d => d);
+      .attr("y", (d, i) => (i % weekdays) * cellWidth + margin)
+      .text(d => format(d, "EEE"));
+
+    container
+      .append("g")
+      .attr("class", () => this.b("month-container"))
+      .selectAll("text")
+      .data(monthsList)
+      .join("text")
+      .text(d => format(d, "MMM"))
+      .attr("class", () => this.b("month"))
+      .attr("x", (d, i) => Math.floor(getDayOfYear(d) / weekdays) * cellWidth)
+      .attr("y", () => 10);
+
     this.drawChart();
   },
   methods: {
@@ -97,8 +125,8 @@ export default {
         .append("rect")
         .data([...this.mockDays, ...this.daysOfYear])
         .join("rect")
-        .attr("x", (d, i) => Math.floor(i / 7) * 11)
-        .attr("y", (d, i) => (i % 7) * 11)
+        .attr("x", (d, i) => Math.floor(i / weekdays) * cellWidth)
+        .attr("y", (d, i) => (i % weekdays) * cellWidth)
         .attr("class", d => this.b("day", [isBefore(new Date(d.date), new Date(this.year)) ? "mock" : d.date]))
         .style("fill", this.getColor)
         .on("click", d => console.log(d));

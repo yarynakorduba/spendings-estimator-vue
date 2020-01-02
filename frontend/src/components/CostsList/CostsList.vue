@@ -7,7 +7,6 @@
     <h2 :class="b('header')">{{ date }}</h2>
     <table :class="b()">
       <tr :class="b('cost')" v-for="cost in costsOfDate" :key="cost._id">
-        <td :class="b('date')">{{ cost.date }}</td>
         <td :class="b('purpose')">{{ cost.purpose }}</td>
         <td :class="b('amount')">{{ cost.amount }}</td>
       </tr>
@@ -16,9 +15,9 @@
 </template>
 
 <script>
-import { format } from "date-fns"
-import BEM from "../../helpers/BEM"
-import { costsMixin } from "../../mixins"
+import { format } from "date-fns";
+import BEM from "../../helpers/BEM";
+import { costsMixin } from "../../mixins";
 
 export default {
   mixins: [costsMixin],
@@ -27,32 +26,32 @@ export default {
       b: BEM("CostsList"),
       costsOfDate: [],
       date: null
-    }
+    };
   },
   watch: {
     areCostsLoading() {
-      this.getCostsOfDay()
+      this.getCostsOfDay();
     },
     date() {
-      this.getCostsOfDay()
+      this.getCostsOfDay();
     }
   },
   computed: {
     displayedCosts() {
-      return this.costsOfDate.map(cost => ({ ...cost, date: format(new Date(cost.date), "dd/MM/yyyy") }))
+      return this.costsOfDate.map(cost => ({ ...cost, date: format(new Date(cost.date), "dd/MM/yyyy") }));
     }
   },
   mounted() {
-    this.$root.$on("set-date", this.handleDateSetting)
-    this.handleDateSetting(format(new Date(), "yyyy-MM-dd"))
+    this.$root.$on("set-date", this.handleDateSetting);
+    this.handleDateSetting(format(new Date(), "yyyy-MM-dd"));
   },
   methods: {
     handleDateSetting(date) {
-      this.date = date
+      this.date = date;
     },
     getCostsOfDay() {
-      this.costsOfDate = this.getCosts(this.date, this.date)
+      this.costsOfDate = this.getCosts(this.date, this.date);
     }
   }
-}
+};
 </script>
