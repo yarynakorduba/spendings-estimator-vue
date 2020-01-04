@@ -13,6 +13,7 @@ import {
 
 export default {
   state: {
+    years: [],
     byId: {},
     ids: [],
     isLoading: false

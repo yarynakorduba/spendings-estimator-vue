@@ -23,7 +23,7 @@ router.get("/years", (req, res) => {
   const { _id } = retrieveUserInfo(req, res);
 
   try {
-    Cost.aggregate([{ $match: { userId: _id } }, { $project: { year: { $substr: ["$date", 0, 4] } } }])
+    Cost.aggregate([{ $match: { userId: _id } }, { $project: { year: "$date" } }])
       .then(years => res.json({ success: true, years }))
       .catch(error => res.status(500).json({ success: false, error }));
   } catch (error) {

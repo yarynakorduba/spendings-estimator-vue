@@ -6,6 +6,7 @@
   <div :class="b()">
     <h2 :class="b('header')">Your spendings in this year</h2>
     <div :class="b('container')"><svg :class="b('year')" /></div>
+    {{ costYears }}
   </div>
 </template>
 
@@ -26,8 +27,6 @@ import {
   setDay,
   getDayOfYear
 } from "date-fns";
-
-import { getCostYears } from "../../api/";
 
 import BEM from "../../helpers/BEM";
 import { dateFormat } from "../../constants";
@@ -88,7 +87,6 @@ export default {
   },
   async mounted() {
     this.getCostsOfYear();
-
     const container = d3
       .select("svg")
       .attr("width", chartWidth)

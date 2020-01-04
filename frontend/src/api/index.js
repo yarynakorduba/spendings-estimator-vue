@@ -11,6 +11,7 @@ export const signupUser = credentials => customFetch("api/users/signup", "POST",
 export default {
   addCost,
   getCosts,
+  getCostYears,
   signinUser,
   signupUser
 };
