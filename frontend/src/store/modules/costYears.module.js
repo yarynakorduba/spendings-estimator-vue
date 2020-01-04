@@ -1,3 +1,5 @@
+import { map, prop } from "ramda";
+
 import Api from "../../api";
 import { FETCH_COST_YEARS } from "../actionTypes";
 import { FETCH_COST_YEARS_START, FETCH_COST_YEARS_ERROR, FETCH_COST_YEARS_SUCCESS } from "../mutationTypes";
@@ -12,7 +14,7 @@ export default {
       state.isLoading = true;
     },
     [FETCH_COST_YEARS_SUCCESS]: (state, years) => {
-      state.list = years;
+      state.list = map(prop("_id"), years);
       state.isLoading = false;
     },
     [FETCH_COST_YEARS_ERROR]: state => {
@@ -29,7 +31,7 @@ export default {
     }
   },
   getters: {
-    getCostYears: state => console.log(state) || state.list,
+    getCostYears: state => state.list,
     areCostYearsLoading: state => state.isLoading
   }
 };

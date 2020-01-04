@@ -6,7 +6,11 @@
   <div :class="b()">
     <h2 :class="b('header')">Your spendings in this year</h2>
     <div :class="b('container')"><svg :class="b('year')" /></div>
-    {{ costYears }}
+    <div :class="b('years-container')">
+      <button v-for="year in costYears" :key="year" @click="handleYearChange(year)">
+        {{ year }}
+      </button>
+    </div>
   </div>
 </template>
 
@@ -83,6 +87,10 @@ export default {
     areCostsLoading() {
       this.getCostsOfYear();
       this.drawChart();
+    },
+    year() {
+      this.getCostsOfYear();
+      this.drawChart();
     }
   },
   async mounted() {
@@ -117,6 +125,9 @@ export default {
     this.drawChart();
   },
   methods: {
+    handleYearChange(year) {
+      this.year = startOfYear(new Date(`${year}-01-01`));
+    },
     drawChart() {
       this.field.enter().remove();
       this.field
@@ -133,6 +144,11 @@ export default {
     },
     getCostsOfYear() {
       this.costsOfYear = this.getCosts(format(this.year, dateFormat), format(endOfYear(this.year), dateFormat));
+
+      if (find(x => new Date(x) === new Date(this.year)) && isEmpty(this.costsOfYear)) {
+        this.fetchCosts(this.year);
+        this.costsOfYear = this.getCosts(format(this.year, dateFormat), format(endOfYear(this.year), dateFormat));
+      }
     },
     getColor(d) {
       const sumOfCosts = reduce((acc, current) => acc + current.amount, 0, d.costs);
