@@ -3,7 +3,7 @@
 .CostsList {
   padding: 0 2rem 0 0;
   color: $darkgrey;
-  width: 25vw;
+  width: 17vw;
 
   &__cost {
     height: 1.5rem;
@@ -17,5 +17,10 @@
 
   &__header {
     color: $darkgrey;
+  }
+
+  &__empty-message {
+    color: $lightgrey;
+    font-weight: bold;
   }
 }

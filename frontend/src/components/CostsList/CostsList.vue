@@ -3,14 +3,16 @@
 </style>
 
 <template>
-  <div>
+  <div :class="b()">
     <h2 :class="b('header')">{{ date }}</h2>
-    <table :class="b()">
+    <table v-if="costsOfDate.length" :class="b()">
       <tr :class="b('cost')" v-for="cost in costsOfDate" :key="cost._id">
         <td :class="b('purpose')">{{ cost.purpose }}</td>
         <td :class="b('amount')">{{ cost.amount }}</td>
       </tr>
     </table>
+
+    <div v-else :class="b('empty-message')">No costs today ^_^</div>
   </div>
 </template>
 

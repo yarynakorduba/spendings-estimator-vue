@@ -18,9 +18,26 @@
 
   &__header {
     color: $darkgrey;
+    margin-bottom: 0;
+  }
+
+  &__sum {
+    color: $darkgrey;
+    font-size: 0.65rem;
+    margin-bottom: 1rem;
   }
 
   &__month-container {
     transform: translate(30px, 0);
+  }
+
+  &__year {
+    background: $blue;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 0.325rem 0.5rem;
+    cursor: pointer;
+    margin-right: 0.5rem;
   }
 }
