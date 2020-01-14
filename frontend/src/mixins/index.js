@@ -24,8 +24,8 @@ export const costsMixin = {
     }
   },
   methods: {
-    fetchCosts() {
-      this.$store.dispatch(FETCH_COSTS);
+    fetchCosts(year) {
+      this.$store.dispatch(FETCH_COSTS, year);
     },
     fetchCostYears() {
       this.$store.dispatch(FETCH_COST_YEARS);

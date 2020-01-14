@@ -1,5 +1,5 @@
 import { map, prop, indexBy, pickBy, compose, values } from "ramda";
-import { isWithinInterval, startOfDay, endOfDay } from "date-fns";
+import { isWithinInterval, startOfDay, endOfDay, startOfYear, format } from "date-fns";
 import Api from "../../api";
 import { ADD_COST, FETCH_COSTS } from "../actionTypes";
 import {
@@ -10,6 +10,7 @@ import {
   FETCH_COSTS_SUCCESS,
   FETCH_COSTS_ERROR
 } from "../mutationTypes";
+import { dateFormat } from "../../constants";
 
 export default {
   state: {
@@ -39,15 +40,15 @@ export default {
     },
     [FETCH_COSTS_SUCCESS]: (state, costs) => {
       //for direct interaction with the store module
-      state.byId = indexBy(prop("_id"), costs);
-      state.ids = map(prop("_id"), costs);
+      state.byId = { ...state.byId, ...indexBy(prop("_id"), costs) };
+      state.ids = [...state.ids, ...map(prop("_id"), costs)];
       state.isLoading = false;
     }
   },
   actions: {
-    [FETCH_COSTS]: async context => {
+    [FETCH_COSTS]: async (context, payload) => {
       context.commit(FETCH_COSTS_START);
-      const result = await Api.getCosts();
+      const result = await Api.getCosts(format(startOfYear(new Date(payload)), dateFormat));
       return result.success
         ? context.commit(FETCH_COSTS_SUCCESS, result.costs)
         : context.commit(FETCH_COSTS_ERROR, result);

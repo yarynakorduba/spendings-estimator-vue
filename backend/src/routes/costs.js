@@ -1,34 +1,12 @@
 import express from "express";
 import mongoose from "mongoose";
-import { addYears, startOfYear } from "date-fns";
+import { addYears, startOfYear, endOfYear } from "date-fns";
 
 import Cost from "../models/cost";
 
 import { retrieveUserInfo } from "../../helpers";
 
 const router = express.Router();
-
-router.get("/", (req, res) => {
-  let { year } = req.params;
-  const { _id } = retrieveUserInfo(req, res);
-  const conditions = { userId: _id };
-  if (!year) {
-    year = startOfYear(new Date());
-  }
-  conditions.date = {
-    $gte: year,
-    $lt: addYears(new Date(year), 1)
-  };
-
-  try {
-    Cost.find()
-      .exec()
-      .then(costs => res.json({ success: true, costs }))
-      .catch(error => res.status(500).json({ success: false, error }));
-  } catch (error) {
-    res.status(500).json({ success: false, error });
-  }
-});
 
 router.get("/years", (req, res) => {
   const { _id } = retrieveUserInfo(req, res);
@@ -40,6 +18,25 @@ router.get("/years", (req, res) => {
       { $group: { _id: "$year" } }
     ])
       .then(years => res.json({ success: true, years }))
+      .catch(error => res.status(500).json({ success: false, error }));
+  } catch (error) {
+    res.status(500).json({ success: false, error });
+  }
+});
+
+router.get("/:year", (req, res) => {
+  let { year } = req.params;
+  const { _id } = retrieveUserInfo(req, res);
+  const conditions = { userId: _id };
+  conditions.date = {
+    $gte: startOfYear(new Date(year)),
+    $lte: endOfYear(new Date(year))
+  };
+
+  try {
+    Cost.find(conditions)
+      .exec()
+      .then(costs => res.json({ success: true, costs }))
       .catch(error => res.status(500).json({ success: false, error }));
   } catch (error) {
     res.status(500).json({ success: false, error });

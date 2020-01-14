@@ -4,10 +4,13 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+import { retrieveUserInfo } from "../../helpers";
+
 const router = express.Router();
 
 router.get("/", (req, res) => {
-  User.find()
+  const { _id } = retrieveUserInfo(req, res);
+  User.find({ _id })
     .exec()
     .then(user => res.json({ success: true, user }))
     .catch(error => res.status(500).json({ success: false, error }));

@@ -22,10 +22,6 @@ export const customFetch = async (url, method = "GET", body) => {
       if (x.jwt && x.jwt.length) {
         localStorage.setItem("jwt", x.jwt);
       }
-      if (x.jwt === "") {
-        localStorage.clear();
-        window.location.reload();
-      }
       return x;
     });
 };

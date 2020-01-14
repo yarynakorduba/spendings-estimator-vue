@@ -20,7 +20,7 @@
 <script>
 import * as d3 from "d3";
 import { costsMixin } from "../../mixins";
-import { groupBy, reduce, prop, compose, isEmpty, map, times, filter, sum } from "ramda";
+import { groupBy, reduce, prop, compose, isEmpty, map, times, filter, sum, find } from "ramda";
 import {
   format,
   startOfYear,
@@ -30,7 +30,8 @@ import {
   subDays,
   isBefore,
   getDayOfYear,
-  isWithinInterval
+  isWithinInterval,
+  isSameYear
 } from "date-fns";
 
 import BEM from "../../helpers/BEM";
@@ -205,8 +206,11 @@ export default {
     },
     getCostsOfYear() {
       this.costsOfYear = this.getCosts(format(this.year, dateFormat), format(endOfYear(this.year), dateFormat));
-
-      if (find(x => new Date(x) === new Date(this.year)) && isEmpty(this.costsOfYear)) {
+      if (
+        find(x => isSameYear(new Date(`${x}-01-01`), this.year))(this.costYears) &&
+        isEmpty(this.costsOfYear) &&
+        !this.areCostsLoading
+      ) {
         this.fetchCosts(this.year);
         this.costsOfYear = this.getCosts(format(this.year, dateFormat), format(endOfYear(this.year), dateFormat));
       }
