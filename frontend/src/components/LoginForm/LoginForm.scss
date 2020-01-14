@@ -26,4 +26,10 @@
     display: block;
     color: #4b4b4b;
   }
+
+  &__error {
+    color: red;
+    margin-top: 0.875rem;
+    font-size: 0.75rem;
+  }
 }

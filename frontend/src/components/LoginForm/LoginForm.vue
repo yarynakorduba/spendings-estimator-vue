@@ -14,10 +14,13 @@
     <small v-else :class="b('message')"
       >Don't have an account yet? <a :class="b('signup-link')" href="/signup">Sign up</a> here :)</small
     >
+    <div :class="b('error')">{{ error }}</div>
   </form>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 import BEM from "../../helpers/BEM";
 import { SIGNIN_USER, SIGNUP_USER } from "../../store/actionTypes";
 
@@ -30,6 +33,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(["error"]),
     isSignUp() {
       return this.$route.name === "signup";
     }
@@ -43,7 +47,7 @@ export default {
         password: this.password,
         router: this.$router
       });
-      this.email = 0;
+      this.email = "";
       this.password = "";
     }
   }

@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { format } from "date-fns";
+import { format, startOfDay, endOfDay } from "date-fns";
 import BEM from "../../helpers/BEM";
 import { costsMixin } from "../../mixins";
 

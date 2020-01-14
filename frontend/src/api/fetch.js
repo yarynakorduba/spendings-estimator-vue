@@ -16,7 +16,6 @@ export const customFetch = async (url, method = "GET", body) => {
   if (jwt) {
     options.headers.Authorization = `${jwt}`;
   }
-  console.log(process.env);
   return fetch(`${process.env.VUE_APP_HOST}/${url}`, options)
     .then(x => x.json())
     .then(x => {
