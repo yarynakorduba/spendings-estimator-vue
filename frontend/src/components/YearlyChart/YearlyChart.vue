@@ -114,7 +114,7 @@ export default {
       this.drawChart();
     }
   },
-  async mounted() {
+  mounted() {
     this.getCostsOfYear();
     const container = d3
       .select("svg")

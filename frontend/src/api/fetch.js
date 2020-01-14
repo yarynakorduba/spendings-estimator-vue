@@ -1,5 +1,5 @@
 export const customFetch = async (url, method = "GET", body) => {
-  const jwt = localStorage.getItem("jwt")
+  const jwt = localStorage.getItem("jwt");
 
   const options = {
     headers: {
@@ -8,27 +8,25 @@ export const customFetch = async (url, method = "GET", body) => {
         "Access-Control-Allow-Origin, Origin, X-Requested-With, Content-Type, Accept, Authorization"
     },
     method
-  }
+  };
 
   if (body) {
-    options.body = JSON.stringify(body)
+    options.body = JSON.stringify(body);
   }
   if (jwt) {
-    options.headers.Authorization = `${jwt}`
+    options.headers.Authorization = `${jwt}`;
   }
-
-  const result = await fetch(`http://localhost:4000/${url}`, options)
+  console.log(process.env);
+  return fetch(`${process.env.VUE_APP_HOST}/${url}`, options)
     .then(x => x.json())
     .then(x => {
       if (x.jwt && x.jwt.length) {
-        localStorage.setItem("jwt", x.jwt)
+        localStorage.setItem("jwt", x.jwt);
       }
       if (x.jwt === "") {
-        localStorage.clear()
-        window.location.reload()
+        localStorage.clear();
+        window.location.reload();
       }
-      return x
-    })
-
-  return result
-}
+      return x;
+    });
+};
