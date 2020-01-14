@@ -20,4 +20,13 @@
     font-size: 0.75rem;
     font-weight: bold;
   }
+
+  &__logout {
+    height: 1rem;
+    background: blue;
+    border: none;
+    color: white;
+    margin: auto 0 auto 1rem;
+    cursor: pointer;
+  }
 }

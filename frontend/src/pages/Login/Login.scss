@@ -1,7 +1,9 @@
+@import "../../../styles/colors.scss";
+
 .Login {
   background-image: url("../../assets/banner.jpg");
   background-repeat: no-repeat;
-  background-color: #aebefc;
+  background-color: $lightblue;
   background-size: 50%;
   width: 100vw;
   height: 100vh;

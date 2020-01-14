@@ -21,6 +21,8 @@ import { format } from "date-fns";
 import BEM from "../../helpers/BEM";
 import { costsMixin } from "../../mixins";
 
+import { displayedDateFormat, dateFormat } from "../../constants";
+
 export default {
   mixins: [costsMixin],
   data() {
@@ -40,12 +42,12 @@ export default {
   },
   computed: {
     displayedCosts() {
-      return this.costsOfDate.map(cost => ({ ...cost, date: format(new Date(cost.date), "dd/MM/yyyy") }));
+      return this.costsOfDate.map(cost => ({ ...cost, date: format(new Date(cost.date), displayedDateFormat) }));
     }
   },
   mounted() {
     this.$root.$on("set-date", this.handleDateSetting);
-    this.handleDateSetting(format(new Date(), "yyyy-MM-dd"));
+    this.handleDateSetting(format(new Date(), dateFormat));
   },
   methods: {
     handleDateSetting(date) {
