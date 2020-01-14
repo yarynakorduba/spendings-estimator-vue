@@ -35,29 +35,12 @@ import {
 
 import BEM from "../../helpers/BEM";
 import { dateFormat, displayedDateFormat, weekdays, weekdaysList, monthsList } from "../../constants";
+import { basicPalette, hoverPalette, selectedPalette, getColor } from "../../helpers/colors";
 
 const chartWidth = 700;
 const chartHeight = 130;
 const cellWidth = 11;
 const margin = 37;
-
-const basicPalette = ["rgb(235, 237, 240)", "#d9effc", "#0000A0"];
-const hoverPalette = ["rgba(217, 193, 222, 0.7)", "rgba(176, 89, 134, 0.8)", "rgba(104, 26, 31, 0.8)"];
-const selectedPalette = ["#d9c1de", "#d479b9", "#681a1f"];
-
-const getColor = (year, domain, range = basicPalette) => d => {
-  const sumOfCosts = reduce((acc, current) => acc + current.amount, 0, d.costs);
-  if (isBefore(new Date(d.date), new Date(year))) {
-    return "white";
-  }
-  const [basicColor, ...palette] = range;
-  return sumOfCosts === 0
-    ? basicColor
-    : d3
-        .scaleLinear()
-        .domain(domain)
-        .range(palette)(sumOfCosts);
-};
 
 export default {
   mixins: [costsMixin],
@@ -181,11 +164,11 @@ export default {
         .attr("id", d => !isBefore(new Date(d.date), new Date(this.year)) && d.date)
         .attr("class", d => this.b("day", [isBefore(new Date(d.date), new Date(this.year)) ? "mock" : d.date]))
         .style("fill", getColor(this.year, [this.minCosts, this.maxCosts]))
-        .on("mouseenter", d => {
+        .on("mouseenter", ({ date }) => {
           if (this.start && !this.end) {
             const range = {
-              start: isBefore(this.start, new Date(d.date)) ? this.start : new Date(d.date),
-              end: isBefore(this.start, new Date(d.date)) ? new Date(d.date) : this.start
+              start: isBefore(this.start, new Date(date)) ? this.start : new Date(date),
+              end: isBefore(this.start, new Date(date)) ? new Date(date) : this.start
             };
 
             d3.selectAll(`rect`).style("fill", x =>
@@ -210,12 +193,11 @@ export default {
             } else {
               this.end = new Date(d.date);
 
-              d3.selectAll(`rect`).style("fill", x => {
-                if (isWithinInterval(new Date(x.date), { start: this.start, end: this.end })) {
-                  return getColor(this.year, [this.minCosts, this.maxCosts], selectedPalette)(x);
-                }
-                return getColor(this.year, [this.minCosts, this.maxCosts])(x);
-              });
+              d3.selectAll(`rect`).style("fill", x =>
+                isWithinInterval(new Date(x.date), { start: this.start, end: this.end })
+                  ? getColor(this.year, [this.minCosts, this.maxCosts], selectedPalette)(x)
+                  : getColor(this.year, [this.minCosts, this.maxCosts])(x)
+              );
             }
           }
           this.isSelecting = !this.isSelecting;

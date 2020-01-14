@@ -28,7 +28,6 @@ export default {
   computed: {
     customClass() {
       let modifiers = filter(el => el.length, [this.isSelected ? "selected" : "", this.hasCosts ? "has-costs" : ""]);
-
       return modifiers.length ? this.b(modifiers) : this.b();
     },
 
